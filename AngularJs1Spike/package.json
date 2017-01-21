@@ -1,0 +1,19 @@
+{
+  "name": "AngularJs1Spike",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "angular": "^1.6.1",
+    "angular-route": "^1.6.1",
+    "bootstrap": "^3.3.7",
+    "path": "^0.12.7",
+    "webpack": "^1.14.0"
+  }
+}
