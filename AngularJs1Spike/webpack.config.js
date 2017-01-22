@@ -4,7 +4,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: {
         main: './src/app.js',
-        vendor: ['angular']
+        common: ['angular']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

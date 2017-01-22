@@ -1,5 +1,6 @@
 require('angular');
 require('angular-route');
+require('angular-resource');
 
 angular.module('phonecatApp', ['ngRoute', 'core', 'phoneDetail']);
 
