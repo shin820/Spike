@@ -9,30 +9,14 @@ import { HeroesComponent } from './heroes.component';
 import { HeroDetailComponent }  from './hero-detail.component';
 import { HeroService } from './hero.service'
 
+import { AppRoutingModule } from './app-routing.module';
+
 
 @NgModule({
   imports:      [ 
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot([
-    {
-      path:'',
-      redirectTo:'/dashboard',
-      pathMatch:'full',
-    },
-    {
-      path:'heroes',
-      component: HeroesComponent
-    },
-    {
-      path:'detail/:id',
-      component:HeroDetailComponent
-    },
-    {
-      path:'dashboard',
-      component: DashboardComponent
-    }
-  ])
+    AppRoutingModule
   ],
   declarations: [ 
     AppComponent,
@@ -42,7 +26,7 @@ import { HeroService } from './hero.service'
     ],
   /*providers数组告诉 Angular，当它创建新的AppComponent组件时，也要创建一个HeroService的新实例.*/
   providers:[HeroService],
-  bootstrap:    [ AppComponent ]
+  bootstrap:[ AppComponent ]
 })
 export class AppModule { }
 
