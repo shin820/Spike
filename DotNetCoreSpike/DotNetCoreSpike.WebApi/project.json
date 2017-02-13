@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "IdentityServer4": "1.1.0",
+    "IdentityServer4.AccessTokenValidation": "1.0.5",
     "Microsoft.AspNetCore.Mvc": "1.1.1",
     "Microsoft.AspNetCore.Routing": "1.1.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",
@@ -23,7 +24,7 @@
   },
 
   "frameworks": {
-    "netcoreapp1.1": {
+    "netcoreapp1.0": {
       "imports": [
         "dotnet5.6",
         "portable-net45+win8"

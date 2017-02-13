@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 
-namespace DotNetCoreSpike.IdentityServer
+namespace DotNetCoreSpike.WebApi
 {
     public class Program
     {
@@ -14,7 +14,7 @@ namespace DotNetCoreSpike.IdentityServer
         {
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls("http://localhost:5000")
+                .UseUrls("http://localhost:5001")
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()

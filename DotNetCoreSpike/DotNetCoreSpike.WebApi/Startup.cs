@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace DotNetCoreSpike.IdentityServer
+namespace DotNetCoreSpike.WebApi
 {
     public class Startup
     {
@@ -29,11 +29,6 @@ namespace DotNetCoreSpike.IdentityServer
         {
             // Add framework services.
             services.AddMvc();
-
-            services.AddIdentityServer()
-                .AddTemporarySigningCredential()
-                .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,8 +37,14 @@ namespace DotNetCoreSpike.IdentityServer
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            {
+                Authority = "http://localhost:5000",
+                RequireHttpsMetadata = false,
+                ApiName = "api1"
+            });
+
             app.UseMvc();
-            app.UseIdentityServer();
         }
     }
 }
