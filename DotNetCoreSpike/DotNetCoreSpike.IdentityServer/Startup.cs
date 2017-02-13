@@ -32,8 +32,10 @@ namespace DotNetCoreSpike.IdentityServer
 
             services.AddIdentityServer()
                 .AddTemporarySigningCredential()
+                .AddInMemoryIdentityResources(Config.GetIdentityResources()) //FOR OIDC
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients());
+                .AddInMemoryClients(Config.GetClients())
+                .AddTestUsers(Config.GetUsers()); // For Resource Owner
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

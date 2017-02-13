@@ -1,15 +1,22 @@
 {
   "version": "1.0.0-*",
-
+  "testRunner": "xunit",
   "dependencies": {
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "IdentityServer4": "1.1.0",
-    "NETStandard.Library": "1.6.1",
-    "NUnit": "3.6.0"
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.1.0"
+    },
+    "xunit": "2.2.0-rc1-build3507"
   },
 
   "frameworks": {
-    "netstandard1.6": {
-      "imports": "dnxcore50"
+    "netcoreapp1.1": {
+      "imports": [
+        "dotnet5.6",
+        "portable-net45+win8"
+      ]
     }
   }
 }
