@@ -6,8 +6,8 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>135a4d84-d741-4772-bc77-33300af8b05c</ProjectGuid>
-    <RootNamespace>DotNetCoreSpike.AuthorizationServer</RootNamespace>
+    <ProjectGuid>4c41f151-8a98-48aa-b147-161892bcd805</ProjectGuid>
+    <RootNamespace>DotNetCoreSpike.IdentityServer</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>

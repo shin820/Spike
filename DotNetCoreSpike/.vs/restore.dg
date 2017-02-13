@@ -1,3 +1,1 @@
-#:D:\SourceCode\Spike\DotNetCoreSpike.WebApi\DotNetCoreSpike.WebApi.xproj
-D:\SourceCode\Spike\DotNetCoreSpike.WebApi\DotNetCoreSpike.WebApi.xproj|D:\SourceCode\Spike\DotNetCoreSpike\DotNetCoreSpike.AppService\DotNetCoreSpike.AppService.xproj
-D:\SourceCode\Spike\DotNetCoreSpike.WebApi\DotNetCoreSpike.WebApi.xproj|D:\SourceCode\Spike\DotNetCoreSpike\DotNetCoreSpike.Domain\DotNetCoreSpike.Domain.xproj
+#:D:\SourceCode\Spike\DotNetCoreSpike\DotNetCoreSpike.IdentityServer\DotNetCoreSpike.IdentityServer.xproj
