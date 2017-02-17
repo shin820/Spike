@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NUglify.JavaScript.Syntax;
 
 namespace DotNetCoreSpike.Mvc.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
+        [Authorize]
         public IActionResult Index()
         {
             return View();
@@ -17,6 +19,7 @@ namespace DotNetCoreSpike.Mvc.Controllers
 
         public IActionResult About()
         {
+            
             ViewData["Message"] = "Your application description page.";
 
             return View();
@@ -37,7 +40,7 @@ namespace DotNetCoreSpike.Mvc.Controllers
         public async Task Logout()
         {
             await HttpContext.Authentication.SignOutAsync("Cookies");
-            await HttpContext.Authentication.SignOutAsync("oidc");
+            //await HttpContext.Authentication.SignOutAsync("oidc");
         }
     }
 }

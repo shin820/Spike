@@ -2,6 +2,7 @@
   "dependencies": {
     "IdentityServer4": "1.1.0",
     "IdentityServer4.AccessTokenValidation": "1.0.5",
+    "Microsoft.AspNetCore.Authentication": "1.1.0",
     "Microsoft.AspNetCore.Mvc": "1.1.1",
     "Microsoft.AspNetCore.Routing": "1.1.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",

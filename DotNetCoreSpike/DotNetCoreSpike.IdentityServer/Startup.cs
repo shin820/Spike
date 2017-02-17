@@ -46,17 +46,15 @@ namespace DotNetCoreSpike.IdentityServer
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseMvc();
             app.UseIdentityServer();
 
-
-            //// cookie middleware for temporarily storing the outcome of the external authentication
-            //app.UseCookieAuthentication(new CookieAuthenticationOptions
-            //{
-            //    AuthenticationScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme,
-            //    AutomaticAuthenticate = false,
-            //    AutomaticChallenge = false
-            //});
+            // cookie middleware for temporarily storing the outcome of the external authentication
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme,
+                AutomaticAuthenticate = false,
+                AutomaticChallenge = false
+            });
 
             //// middleware for google authentication
             //app.UseGoogleAuthentication(new GoogleOptions
@@ -67,22 +65,25 @@ namespace DotNetCoreSpike.IdentityServer
             //    ClientSecret = "wdfPY6t8H8cecgjlxud__4Gh"
             //});
 
-            //// middleware for external openid connect authentication
-            //app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
-            //{
-            //    SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme,
-            //    SignOutScheme = IdentityServerConstants.SignoutScheme,
+            // middleware for external openid connect authentication
+            app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
+            {
+                SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme,
+                SignOutScheme = IdentityServerConstants.SignoutScheme,
 
-            //    DisplayName = "OpenID Connect",
-            //    Authority = "http://localhost:5002",
-            //    ClientId = "implicit",
+                DisplayName = "OpenID Connect",
+                Authority = "https://demo.identityserver.io/",
+                ClientId = "implicit",
 
-            //    TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        NameClaimType = "name",
-            //        RoleClaimType = "role"
-            //    }
-            //});
+                TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name",
+                    RoleClaimType = "role"
+                }
+            });
+
+
+            app.UseMvc();
 
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
