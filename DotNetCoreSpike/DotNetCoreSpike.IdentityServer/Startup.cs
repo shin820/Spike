@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using IdentityServer4.EntityFramework.Mappers;
 using System.Reflection;
 using IdentityServer4.EntityFramework.DbContexts;
+using Microsoft.AspNetCore.Identity;
 
 namespace DotNetCoreSpike.IdentityServer
 {
@@ -36,12 +37,12 @@ namespace DotNetCoreSpike.IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
-            //services.AddIdentity<ApplicationUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>()
-            //    .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             // Add framework services.
             services.AddMvc();
@@ -49,12 +50,12 @@ namespace DotNetCoreSpike.IdentityServer
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddIdentityServer()
                 .AddTemporarySigningCredential()
-                .AddTestUsers(Config.GetUsers())
+                //.AddTestUsers(Config.GetUsers())
                 .AddConfigurationStore(builder => builder.UseMySql(Configuration.GetConnectionString("DefaultConnection"), options =>
                 options.MigrationsAssembly(migrationsAssembly)))
                 .AddOperationalStore(builder => builder.UseMySql(Configuration.GetConnectionString("DefaultConnection"), options =>
                 options.MigrationsAssembly(migrationsAssembly)))
-/*                .AddAspNetIdentity<ApplicationUser>()*/;
+                .AddAspNetIdentity<ApplicationUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +64,7 @@ namespace DotNetCoreSpike.IdentityServer
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            //app.UseIdentity();
+            app.UseIdentity();
 
             app.UseIdentityServer();
 
@@ -110,39 +111,57 @@ namespace DotNetCoreSpike.IdentityServer
             InitializeDatabase(app);
         }
 
-        private void InitializeDatabase(IApplicationBuilder app)
+        private async void InitializeDatabase(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
-                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                context.Database.Migrate();
-                if (!context.Clients.Any())
+                var configContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+                configContext.Database.Migrate();
+                if (!configContext.Clients.Any())
                 {
                     foreach (var client in Config.GetClients())
                     {
-                        context.Clients.Add(client.ToEntity());
+                        configContext.Clients.Add(client.ToEntity());
                     }
-                    context.SaveChanges();
+                    configContext.SaveChanges();
                 }
 
-                if (!context.IdentityResources.Any())
+                if (!configContext.IdentityResources.Any())
                 {
                     foreach (var resource in Config.GetIdentityResources())
                     {
-                        context.IdentityResources.Add(resource.ToEntity());
+                        configContext.IdentityResources.Add(resource.ToEntity());
                     }
-                    context.SaveChanges();
+                    configContext.SaveChanges();
                 }
 
-                if (!context.ApiResources.Any())
+                if (!configContext.ApiResources.Any())
                 {
                     foreach (var resource in Config.GetApiResources())
                     {
-                        context.ApiResources.Add(resource.ToEntity());
+                        configContext.ApiResources.Add(resource.ToEntity());
                     }
-                    context.SaveChanges();
+                    configContext.SaveChanges();
+                }
+
+                var appContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                appContext.Database.Migrate();
+                if (!appContext.Users.Any())
+                {
+                    foreach (var user in Config.GetUsers())
+                    {
+                        await userManager.CreateAsync(new ApplicationUser
+                        {
+                            Id = user.SubjectId,
+                            UserName = user.Username,
+                            PasswordHash = user.Password,
+                            Email = "test@123.com"
+                        });
+                    }
+                    appContext.SaveChanges();
                 }
             }
         }

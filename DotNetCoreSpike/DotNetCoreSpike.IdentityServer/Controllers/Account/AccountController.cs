@@ -15,7 +15,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using DotNetCoreSpike.IdentityServer.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -27,18 +29,21 @@ namespace IdentityServer4.Quickstart.UI
     [SecurityHeaders]
     public class AccountController : Controller
     {
-        private readonly TestUserStore _users;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly AccountService _account;
 
         public AccountController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
-            IHttpContextAccessor httpContextAccessor,
-            TestUserStore users = null)
+            IHttpContextAccessor httpContextAccessor
+            )
         {
-            // if the TestUserStore is not in DI, then we'll just use the global users collection
-            _users = users ?? new TestUserStore(TestUsers.Users);
+            _userManager = userManager;
+            _signInManager = signInManager;
             _interaction = interaction;
             _account = new AccountService(interaction, httpContextAccessor, clientStore);
         }
@@ -69,8 +74,8 @@ namespace IdentityServer4.Quickstart.UI
         {
             if (ModelState.IsValid)
             {
-                // validate username/password against in-memory store
-                if (_users.ValidateCredentials(model.Username, model.Password))
+                var result = await _signInManager.CheckPasswordSignInAsync(new ApplicationUser { UserName = model.Username }, model.Password, lockoutOnFailure: false);
+                if (result.Succeeded)
                 {
                     AuthenticationProperties props = null;
                     // only set explicit expiration here if persistent. 
@@ -85,8 +90,8 @@ namespace IdentityServer4.Quickstart.UI
                     };
 
                     // issue authentication cookie with subject ID and username
-                    var user = _users.FindByUsername(model.Username);
-                    await HttpContext.Authentication.SignInAsync(user.SubjectId, user.Username, props);
+                    var user = await _userManager.FindByNameAsync(model.Username);
+                    await HttpContext.Authentication.SignInAsync(user.Id, user.UserName, props);
 
                     // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
                     if (_interaction.IsValidReturnUrl(model.ReturnUrl))
@@ -136,13 +141,13 @@ namespace IdentityServer4.Quickstart.UI
                 try
                 {
                     // hack: try/catch to handle social providers that throw
-                    await HttpContext.Authentication.SignOutAsync(vm.ExternalAuthenticationScheme, 
+                    await HttpContext.Authentication.SignOutAsync(vm.ExternalAuthenticationScheme,
                         new AuthenticationProperties { RedirectUri = url });
                 }
-                catch(NotSupportedException) // this is for the external providers that don't have signout
+                catch (NotSupportedException) // this is for the external providers that don't have signout
                 {
                 }
-                catch(InvalidOperationException) // this is for Windows/Negotiate
+                catch (InvalidOperationException) // this is for Windows/Negotiate
                 {
                 }
             }
@@ -230,14 +235,15 @@ namespace IdentityServer4.Quickstart.UI
             var provider = info.Properties.Items["scheme"];
             var userId = userIdClaim.Value;
 
-            // check if the external user is already provisioned
-            var user = _users.FindByExternalProvider(provider, userId);
-            if (user == null)
-            {
-                // this sample simply auto-provisions new external user
-                // another common approach is to start a registrations workflow first
-                user = _users.AutoProvisionUser(provider, userId, claims);
-            }
+            //// check if the external user is already provisioned
+            //var user = _users.FindByExternalProvider(provider, userId);
+            //if (user == null)
+            //{
+            //    // this sample simply auto-provisions new external user
+            //    // another common approach is to start a registrations workflow first
+            //    user = _users.AutoProvisionUser(provider, userId, claims);
+            //}
+            var user = await _userManager.FindByIdAsync(userId);
 
             var additionalClaims = new List<Claim>();
 
@@ -258,7 +264,7 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             // issue authentication cookie for user
-            await HttpContext.Authentication.SignInAsync(user.SubjectId, user.Username,  provider, props, additionalClaims.ToArray());
+            await HttpContext.Authentication.SignInAsync(user.Id, user.UserName, provider, props, additionalClaims.ToArray());
 
             // delete temporary cookie used during external authentication
             await HttpContext.Authentication.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
