@@ -153,12 +153,14 @@ namespace DotNetCoreSpike.IdentityServer
                 {
                     foreach (var user in Config.GetUsers())
                     {
-                        var a = userManager.CreateAsync(new ApplicationUser
+                        var appUser = new ApplicationUser
                         {
                             Id = user.SubjectId,
                             UserName = user.Username,
                             Email = "test@123.com"
-                        }, user.Password).Result;
+                        };
+                        var result = userManager.CreateAsync(appUser, user.Password).Result;
+                        result = userManager.AddClaimsAsync(appUser, user.Claims).Result;
                     }
                     appContext.SaveChanges();
                 }

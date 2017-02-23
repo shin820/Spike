@@ -74,24 +74,24 @@ namespace IdentityServer4.Quickstart.UI
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.CheckPasswordSignInAsync(new ApplicationUser { UserName = model.Username }, model.Password, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    AuthenticationProperties props = null;
-                    // only set explicit expiration here if persistent. 
-                    // otherwise we reply upon expiration configured in cookie middleware.
-                    if (AccountOptions.AllowRememberLogin && model.RememberLogin)
-                    {
-                        props = new AuthenticationProperties
-                        {
-                            IsPersistent = true,
-                            ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
-                        };
-                    };
+                    //AuthenticationProperties props = null;
+                    //// only set explicit expiration here if persistent. 
+                    //// otherwise we reply upon expiration configured in cookie middleware.
+                    //if (AccountOptions.AllowRememberLogin && model.RememberLogin)
+                    //{
+                    //    props = new AuthenticationProperties
+                    //    {
+                    //        IsPersistent = true,
+                    //        ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
+                    //    };
+                    //};
 
-                    // issue authentication cookie with subject ID and username
-                    var user = await _userManager.FindByNameAsync(model.Username);
-                    await HttpContext.Authentication.SignInAsync(user.Id, user.UserName, props);
+                    //// issue authentication cookie with subject ID and username
+                    //var user = await _userManager.FindByNameAsync(model.Username);
+                    //await HttpContext.Authentication.SignInAsync(user.Id, user.UserName, props);
 
                     // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
                     if (_interaction.IsValidReturnUrl(model.ReturnUrl))

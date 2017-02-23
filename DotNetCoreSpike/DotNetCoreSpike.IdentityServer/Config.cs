@@ -76,6 +76,8 @@ namespace DotNetCoreSpike.IdentityServer
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.Address,
                         "api1"
                     },
                     AllowOfflineAccess = true
@@ -91,7 +93,7 @@ namespace DotNetCoreSpike.IdentityServer
                 {
                     SubjectId = "1",
                     Username = "alice",
-                    Password = "#123456Aa",
+                    Password = "Welcome@123",
                     Claims =
                     {
                         new Claim(JwtClaimTypes.Name, "Alice Smith"),
@@ -102,14 +104,15 @@ namespace DotNetCoreSpike.IdentityServer
                         new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
                         new Claim(JwtClaimTypes.Address,
                             @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }",
-                            IdentityServerConstants.ClaimValueTypes.Json)
+                            IdentityServerConstants.ClaimValueTypes.Json),
+                        new Claim("api1", "api1"),
                     }
                 },
                 new TestUser
                 {
                     SubjectId = "2",
                     Username = "bob",
-                    Password = "#123456Aa",
+                    Password = "Welcome@123",
                     Claims =
                     {
                         new Claim(JwtClaimTypes.Name, "Bob Smith"),
