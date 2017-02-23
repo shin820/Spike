@@ -91,29 +91,7 @@ namespace DotNetCoreSpike.IdentityServer
                 {
                     SubjectId = "1",
                     Username = "alice",
-                    Password = "password",
-                    Claims = new[]
-                    {
-                        new Claim("name", "Alice"),
-                        new Claim("website", "https://alice.com")
-                    }
-                },
-                new TestUser
-                {
-                    SubjectId = "2",
-                    Username = "bob",
-                    Password = "password",
-                    Claims = new[]
-                    {
-                        new Claim("name", "Bob"),
-                        new Claim("website", "https://bob.com")
-                    }
-                },
-                new TestUser
-                {
-                    SubjectId = "3",
-                    Username = "alice",
-                    Password = "alice",
+                    Password = "#123456Aa",
                     Claims =
                     {
                         new Claim(JwtClaimTypes.Name, "Alice Smith"),
@@ -129,9 +107,9 @@ namespace DotNetCoreSpike.IdentityServer
                 },
                 new TestUser
                 {
-                    SubjectId = "4",
+                    SubjectId = "2",
                     Username = "bob",
-                    Password = "bob",
+                    Password = "#123456Aa",
                     Claims =
                     {
                         new Claim(JwtClaimTypes.Name, "Bob Smith"),

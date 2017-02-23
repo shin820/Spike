@@ -111,7 +111,7 @@ namespace DotNetCoreSpike.IdentityServer
             InitializeDatabase(app);
         }
 
-        private async void InitializeDatabase(IApplicationBuilder app)
+        private void InitializeDatabase(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
@@ -153,13 +153,12 @@ namespace DotNetCoreSpike.IdentityServer
                 {
                     foreach (var user in Config.GetUsers())
                     {
-                        await userManager.CreateAsync(new ApplicationUser
+                        var a = userManager.CreateAsync(new ApplicationUser
                         {
                             Id = user.SubjectId,
                             UserName = user.Username,
-                            PasswordHash = user.Password,
                             Email = "test@123.com"
-                        });
+                        }, user.Password).Result;
                     }
                     appContext.SaveChanges();
                 }
